@@ -332,13 +332,13 @@ static NSString * const reuseIdentifier = @"Cell";
         cell.imageBlog.image = nil;
         cell.imageActivityIndicatorView.hidden=NO;
         [cell.imageActivityIndicatorView startAnimating];
-        //__weak BlogCollectionViewCell *weakcell = cell;
         [self downloadImage:blogResponse.blogImageUrl withBlogId:blogResponse.blogId withCell:(BlogCollectionViewCell*)cell withCallBack:^(NSString *strFilePath) {
             BlogCollectionViewCell *blogCell = (BlogCollectionViewCell*)[self.collectionView cellForItemAtIndexPath:indexPath];
             if(blogCell){
                 [blogCell.imageActivityIndicatorView stopAnimating];
                 blogCell.imageActivityIndicatorView.hidden=YES;
                 blogCell.imageBlog.image = [UIImage imageNamed:strFilePath];
+                blogCell.widthImageConstraint.constant = blogCell.contentView.frame.size.width;
             }
             else{
                 blogCell.imageBlog.image = nil;

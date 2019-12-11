@@ -25,8 +25,8 @@ static NSString * const reuseIdentifier = @"Cell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations
-    // self.clearsSelectionOnViewWillAppear = NO;
+    [self.collectionView registerClass:BlogCollectionViewCell.self forCellWithReuseIdentifier:reuseIdentifier];
+    [self.collectionView setBackgroundColor:[UIColor whiteColor]];
     self.title = @"Research & Insights";
     [self.navigationController.navigationBar setTitleTextAttributes:
      @{NSForegroundColorAttributeName:[UIColor blackColor],
@@ -35,8 +35,21 @@ static NSString * const reuseIdentifier = @"Cell";
     UIBarButtonItem *barButtonRefresh = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:(UIBarButtonSystemItemRefresh) target:self action:@selector(barButtonRefresh_Click:)];
     self.navigationItem.rightBarButtonItem = barButtonRefresh;
 
+    self.collectionView.delegate=self;
+    self.collectionView.dataSource=self;
     [self setupActivityView];
     [self loadBlogs];
+    
+    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    [[NSNotificationCenter defaultCenter]
+       addObserver:self selector:@selector(orientationChanged:)
+       name:UIDeviceOrientationDidChangeNotification
+       object:[UIDevice currentDevice]];
+    
+}
+
+-(void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
     
 }
 
@@ -44,46 +57,46 @@ static NSString * const reuseIdentifier = @"Cell";
     [self loadBlogs];
 }
 
-
+/* Load Loader screen which will load grey color background view and white color activity inidicator*/
 -(void)setupActivityView{
     self.viewBlogLoading = [[UIView alloc]init];
     [self.viewBlogLoading  setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.viewBlogLoading setBackgroundColor:[UIColor grayColor]];
-   [self.navigationController.view addSubview:self.viewBlogLoading];
+   [self.collectionView addSubview:self.viewBlogLoading];
 
-    [self.navigationController.view addConstraint:
+    [self.view addConstraint:
      [NSLayoutConstraint constraintWithItem:self.viewBlogLoading
                          attribute:NSLayoutAttributeWidth
                          relatedBy:NSLayoutRelationEqual
-                         toItem:nil
+                         toItem:self.collectionView
                          attribute:NSLayoutAttributeWidth
                          multiplier:1
-                         constant:self.view.frame.size.width]];
+                         constant:0]];
     
-    [self.navigationController.view addConstraint:
+    [self.view addConstraint:
     [NSLayoutConstraint constraintWithItem:self.viewBlogLoading
                         attribute:NSLayoutAttributeHeight
                         relatedBy:NSLayoutRelationEqual
-                        toItem:nil
+                        toItem:self.collectionView
                         attribute:NSLayoutAttributeHeight
                         multiplier:1
-                        constant:self.view.frame.size.height]];
+                        constant:0]];
 
     
-    [self.navigationController.view addConstraint:
+    [self.view addConstraint:
      [NSLayoutConstraint constraintWithItem:self.viewBlogLoading
                          attribute:NSLayoutAttributeCenterX
                          relatedBy:0
-                         toItem:self.navigationController.view
+                         toItem:self.self.view
                          attribute:NSLayoutAttributeCenterX
                          multiplier:1
                          constant:0]];
 
-    [self.navigationController.view addConstraint:
+    [self.view addConstraint:
      [NSLayoutConstraint constraintWithItem:self.viewBlogLoading
                          attribute:NSLayoutAttributeCenterY
                          relatedBy:0
-                         toItem:self.navigationController.view
+                         toItem:self.self.view
                          attribute:NSLayoutAttributeCenterY
                          multiplier:1
                          constant:0]];
@@ -133,40 +146,43 @@ static NSString * const reuseIdentifier = @"Cell";
                         multiplier:1
                         constant:50]];
 }
-
+/* on view load and on refresh button this will call RSS feed and will load XML data */
 -(void)loadBlogs{
     
-    self.viewBlogLoading.hidden = NO;
-    [self.activityLoadView startAnimating];
-    self.parentElement = nil;
-    
-    self.blogResponseArray = [[NSMutableArray alloc]init];
-    self.blogResponseSectionArray = [[NSMutableArray alloc]init];
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-    NSURL *url = [[NSURL alloc] initWithString:@"https://www.personalcapital.com/blog/feed/"];
-    NSXMLParser *xmlparser = [[NSXMLParser alloc] initWithContentsOfURL:url];
-    xmlparser.delegate = (id)self;
-    BOOL success = [xmlparser parse];
+        self.viewBlogLoading.hidden = NO;
+        [self.activityLoadView startAnimating];
+        self.parentElement = nil;
+        [self.blogResponseSectionArray removeAllObjects];
+        [self.blogResponseArray removeAllObjects];
+        [self.collectionView reloadData];
+        self.blogResponseArray = [[NSMutableArray alloc]init];
+        self.blogResponseSectionArray = [[NSMutableArray alloc]init];
+        
+        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+        NSURL *url = [[NSURL alloc] initWithString:@"https://www.personalcapital.com/blog/feed/"];
+        NSXMLParser *xmlparser = [[NSXMLParser alloc] initWithContentsOfURL:url];
+        xmlparser.delegate = (id)self;
+        BOOL success = [xmlparser parse];
 
-    if(success){
-        NSLog(@"XML blog loaded");
-    }
-    
-    NSString *directoryBlogImagePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"BlogPhoto"];
-    NSFileManager *fileManager= [NSFileManager defaultManager];
-    NSError * error;
-    if([fileManager fileExistsAtPath:directoryBlogImagePath]){
-        [fileManager removeItemAtPath:directoryBlogImagePath error:&error];
-    }
-    if(![fileManager fileExistsAtPath:directoryBlogImagePath isDirectory:nil]){
-           if(![fileManager createDirectoryAtPath:directoryBlogImagePath withIntermediateDirectories:YES attributes:nil error:NULL]){
-               NSLog(@"Error: Create folder failed %@", directoryBlogImagePath);
-               
-           }
-    }
-    self.directoryBlogImagePath = directoryBlogImagePath;
-    });
-    
+        if(success){
+            NSLog(@"XML blog loaded");
+        }
+        
+        NSString *directoryBlogImagePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"BlogPhoto"];
+        NSFileManager *fileManager= [NSFileManager defaultManager];
+        NSError * error;
+        if([fileManager fileExistsAtPath:directoryBlogImagePath]){
+            [fileManager removeItemAtPath:directoryBlogImagePath error:&error];
+        }
+        if(![fileManager fileExistsAtPath:directoryBlogImagePath isDirectory:nil]){
+               if(![fileManager createDirectoryAtPath:directoryBlogImagePath withIntermediateDirectories:YES attributes:nil error:NULL]){
+                   NSLog(@"Error: Create folder failed %@", directoryBlogImagePath);
+                   
+               }
+        }
+        self.directoryBlogImagePath = directoryBlogImagePath;
+        });
+        
 }
 
 #pragma mark - NSXMLParser
@@ -206,6 +222,7 @@ static NSString * const reuseIdentifier = @"Cell";
     
 }
 
+/* When data is found store it in array*/
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
     if( ([self.parentElement isEqualToString:@"image"] || [self.parentElement isEqualToString:@"item"]) && ([self.strCurrentElement isEqualToString:@"title"])){
         self.blogResponse.blogTitle = [NSString stringWithFormat:@"%@%@",self.blogResponse.blogTitle,string];
@@ -238,7 +255,7 @@ static NSString * const reuseIdentifier = @"Cell";
 }
 
 
-
+/* When end node is found we can add blogResponse to blogResponseSectionArray */
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName
   namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
 
@@ -256,11 +273,14 @@ static NSString * const reuseIdentifier = @"Cell";
     
     else if([elementName isEqualToString:@"channel"]){
         [self.blogResponseArray addObject:self.blogResponseSectionArray];
-        //NSLog(@"self.blogResponseArray=%@",self.blogResponseArray);
+        //NSLog(@"self.blogResponseArray=%d",self.blogResponseSectionArray.count);
         dispatch_async(dispatch_get_main_queue(), ^(void){
-            self.viewBlogLoading.hidden = YES;
-            [self.collectionView reloadData];
-            [self.activityLoadView stopAnimating];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                self.viewBlogLoading.hidden = YES;
+                           [self.collectionView reloadData];
+                           [self.activityLoadView stopAnimating];
+            });
+           
         });
         
     }
@@ -268,21 +288,9 @@ static NSString * const reuseIdentifier = @"Cell";
 }
 
 //XML parsing end
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
 #pragma mark <UICollectionViewDataSource>
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-//#warning Incomplete implementation, return the number of sections
     return [self.blogResponseArray count];
 }
 
@@ -314,6 +322,7 @@ static NSString * const reuseIdentifier = @"Cell";
         cell.contentView.layer.borderWidth = 0.0f;
         cell.labelBlogDecription.text = blogResponse.blogDecription;
         [cell.labelBlogDecription setFont:[UIFont systemFontOfSize:17.0]];
+        cell.labelBlogPreviousArticle.hidden = NO;
     }
     else if(indexPath.section == 1){
         
@@ -324,16 +333,22 @@ static NSString * const reuseIdentifier = @"Cell";
        cell.contentView.layer.borderWidth = 1.0f;
        cell.contentView.layer.borderColor = [[UIColor grayColor] CGColor];
         cell.labelBlogDecription.text = @"";
+        cell.labelBlogPreviousArticle.hidden = YES;
     }
     
+    cell.blogId = blogResponse.blogId;
     
     cell.labelBlogTitle.text = blogResponse.blogTitle;
-   
+
         cell.imageBlog.image = nil;
         cell.imageActivityIndicatorView.hidden=NO;
         [cell.imageActivityIndicatorView startAnimating];
-        [self downloadImage:blogResponse.blogImageUrl withBlogId:blogResponse.blogId withCell:(BlogCollectionViewCell*)cell withCallBack:^(NSString *strFilePath) {
-            BlogCollectionViewCell *blogCell = (BlogCollectionViewCell*)[self.collectionView cellForItemAtIndexPath:indexPath];
+    /*Loading each image individually and store them in NSTemp Directory as a cache which will load image from temp directory*/
+    [self downloadImage:blogResponse.blogImageUrl withBlogId:blogResponse.blogId withIndex: indexPath withCell:(BlogCollectionViewCell*)cell withCallBack:^(NSString *strFilePath) {
+            BlogCollectionViewCell *blogCell = (BlogCollectionViewCell*)[collectionView cellForItemAtIndexPath:indexPath];
+        if(blogCell==nil){
+            [self.collectionView layoutIfNeeded];
+        }
             if(blogCell){
                 [blogCell.imageActivityIndicatorView stopAnimating];
                 blogCell.imageActivityIndicatorView.hidden=YES;
@@ -341,9 +356,10 @@ static NSString * const reuseIdentifier = @"Cell";
                 blogCell.widthImageConstraint.constant = blogCell.contentView.frame.size.width;
             }
             else{
-                blogCell.imageBlog.image = nil;
+                
             }
         }];
+
         
     cell.tag=indexPath.row;
     cell.backgroundView.backgroundColor = [UIColor redColor];
@@ -359,33 +375,35 @@ static NSString * const reuseIdentifier = @"Cell";
     
     NSMutableArray *arraySection = [self.blogResponseArray objectAtIndex:indexPath.section];
     BlogResponse *blogResponse = [arraySection objectAtIndex:indexPath.row];
-    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    BlogContentViewController *blogContentViewController = (BlogContentViewController*)[sb instantiateViewControllerWithIdentifier:@"BlogContent_VC"];
+    BlogContentViewController *blogContentViewController = [[BlogContentViewController alloc]init];
     blogContentViewController.blogArticleLink = blogResponse.blogArticleLink;
     [self.navigationController pushViewController:blogContentViewController animated:YES];
 }
 
--(void)downloadImage:(NSString*)strURL withBlogId:(int)blogId withCell:(BlogCollectionViewCell*)cell withCallBack:(void(^)(NSString *filePath))handler{
+/* Download image and store it in temp directory*/
+-(void)downloadImage:(NSString*)strURL withBlogId:(int)blogId withIndex:(NSIndexPath*)indexPath withCell:(BlogCollectionViewCell*)cell withCallBack:(void(^)(NSString *filePath))handler{
 
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
          NSString *filePath = [self.directoryBlogImagePath stringByAppendingPathComponent:[NSString stringWithFormat: @"blog_%d.jpg",blogId]];
         
         if([[NSFileManager defaultManager] fileExistsAtPath:filePath]){
             dispatch_async(dispatch_get_main_queue(), ^(void){
-                           handler(filePath);
+                        handler(filePath);
+                [cell.imageActivityIndicatorView stopAnimating];
+                cell.imageActivityIndicatorView.hidden=YES;
+                cell.imageBlog.image = [UIImage imageNamed:filePath];
+                cell.widthImageConstraint.constant = cell.contentView.frame.size.width;
             });
             return;
         }
-           
            NSURL *url = [NSURL URLWithString:strURL];
            NSURLSessionDownloadTask *downloadPhotoTask = [[NSURLSession sharedSession]
             downloadTaskWithURL:url completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
-               
                NSString *filePathStr = [self.directoryBlogImagePath stringByAppendingPathComponent:[NSString stringWithFormat: @"blog_%d.jpg",blogId]];
                [[NSData dataWithContentsOfURL:location] writeToFile:filePathStr atomically:YES];
-               dispatch_async(dispatch_get_main_queue(), ^(void){
-                   handler(filePathStr);
-               });
+                   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                      handler(filePathStr);
+                   });
              
            }];
         
@@ -431,6 +449,48 @@ static NSString * const reuseIdentifier = @"Cell";
     else{
         return UIEdgeInsetsMake(10, 10, 10, 10);
     }
+    
+}
+
+
+/*update ui on orientation*/
+- (void) orientationChanged:(NSNotification *)note{
+   UIDevice * device = note.object;
+   switch(device.orientation)
+   {
+       case UIDeviceOrientationPortrait:
+          
+       break;
+
+       case UIDeviceOrientationLandscapeLeft:
+           
+           break;
+           case UIDeviceOrientationLandscapeRight:
+          
+           break;
+           
+       break;
+
+       default:
+       break;
+   };
+    
+    
+    [self.collectionView layoutIfNeeded];
+    [self.collectionView reloadData];
+    
+    [self.collectionView performBatchUpdates:^{}
+    completion:^(BOOL finished) {
+        NSArray *indexArray = [self.collectionView visibleCells];
+          for(BlogCollectionViewCell *cell in indexArray){
+                  cell.widthLabelTitleConstraint.constant = ([cell contentView].frame.size.width)-10;
+          }
+    }];
+    
+     
+  
+
+    
     
 }
 @end

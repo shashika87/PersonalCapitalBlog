@@ -20,6 +20,18 @@
 //
 //       self.window.rootViewController = navController;
 //       [self.window makeKeyAndVisible];
+    
+    UICollectionViewFlowLayout *flowLayout  = [[UICollectionViewFlowLayout alloc]init];
+    flowLayout.sectionInset = UIEdgeInsetsMake(10,  10,  10,  10);
+    flowLayout.itemSize = CGSizeMake( 90, 120);
+            BlogCollectionViewController *blogCollectionViewController = [[BlogCollectionViewController alloc] initWithCollectionViewLayout:flowLayout];
+           UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:blogCollectionViewController];
+    
+    UIWindowScene * windowScene = (UIWindowScene *)scene;
+       _window = [[UIWindow alloc] initWithFrame:windowScene.coordinateSpace.bounds];
+       _window.windowScene = windowScene;
+       [_window setRootViewController:navController];
+       [_window makeKeyAndVisible];
 }
 
 

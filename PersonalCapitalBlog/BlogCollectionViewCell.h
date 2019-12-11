@@ -11,17 +11,20 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface BlogCollectionViewCell : UICollectionViewCell;
-@property(nonatomic,weak) IBOutlet UILabel *labelBlogTitle;
-@property(nonatomic,weak) IBOutlet UILabel *labelBlogDecription;
-@property(nonatomic,weak) IBOutlet UIImageView *imageBlog;
-@property(nonatomic,weak) IBOutlet UIView *sepratorView;
-@property(nonatomic,weak) IBOutlet UIActivityIndicatorView *imageActivityIndicatorView;
-@property(nonatomic,weak) IBOutlet NSLayoutConstraint *widthImageConstraint;
-@property(nonatomic,weak) IBOutlet NSLayoutConstraint *widthLabelTitleConstraint;
-@property(nonatomic,weak) IBOutlet NSLayoutConstraint *widthLabelDescConstraint;
-@property(nonatomic,weak) IBOutlet NSLayoutConstraint *widthViewSepratorConstraint;
-@property(nonatomic,weak) IBOutlet NSLayoutConstraint *heightImageConstarint;
-@property(nonatomic,weak) IBOutlet NSLayoutConstraint *bottomImageConstraint;
+@property(nonatomic,strong) IBOutlet UILabel *labelBlogTitle;
+@property(nonatomic,strong) IBOutlet UILabel *labelBlogDecription;
+@property(nonatomic,strong) IBOutlet UILabel *labelBlogPreviousArticle;
+@property(nonatomic,strong) IBOutlet UIImageView *imageBlog;
+@property(nonatomic,strong) IBOutlet UIView *sepratorView;
+@property(nonatomic,strong) IBOutlet UIActivityIndicatorView *imageActivityIndicatorView;
+@property(nonatomic,strong) IBOutlet NSLayoutConstraint *widthImageConstraint;
+@property(nonatomic,strong) IBOutlet NSLayoutConstraint *widthLabelTitleConstraint;
+@property(nonatomic,strong) IBOutlet NSLayoutConstraint *widthLabelDescConstraint;
+@property(nonatomic,strong) IBOutlet NSLayoutConstraint *widthViewSepratorConstraint;
+@property(nonatomic,strong) IBOutlet NSLayoutConstraint *heightImageConstarint;
+@property(nonatomic,strong) IBOutlet NSLayoutConstraint *bottomImageConstraint;
+@property int blogId;
+@property(nonatomic,strong) CAShapeLayer *shapeLineLayer;
 @end
 
 NS_ASSUME_NONNULL_END

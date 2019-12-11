@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DF7828C8239A24C70029F73A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DF7828C7239A24C70029F73A /* Main.storyboard */; };
 		DF7828CD239ABE010029F73A /* BlogCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DF7828CC239ABE010029F73A /* BlogCollectionViewCell.m */; };
 		DF7828D0239AC0B30029F73A /* BlogResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = DF7828CF239AC0B30029F73A /* BlogResponse.m */; };
 		DF8ADE02239BA24A006E3EE2 /* LabelBlog.m in Sources */ = {isa = PBXBuildFile; fileRef = DF8ADE01239BA24A006E3EE2 /* LabelBlog.m */; };
@@ -15,7 +14,6 @@
 		DFC7435D239A1C9200C55F1E /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DFC7435C239A1C9200C55F1E /* SceneDelegate.m */; };
 		DFC74360239A1C9200C55F1E /* BlogContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DFC7435F239A1C9200C55F1E /* BlogContentViewController.m */; };
 		DFC74365239A1C9700C55F1E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFC74364239A1C9700C55F1E /* Assets.xcassets */; };
-		DFC74368239A1C9700C55F1E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFC74366239A1C9700C55F1E /* LaunchScreen.storyboard */; };
 		DFC7436B239A1C9700C55F1E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DFC7436A239A1C9700C55F1E /* main.m */; };
 		DFC74375239A1C9700C55F1E /* PersonalCapitalBlogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DFC74374239A1C9700C55F1E /* PersonalCapitalBlogTests.m */; };
 		DFC74380239A1C9700C55F1E /* PersonalCapitalBlogUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = DFC7437F239A1C9700C55F1E /* PersonalCapitalBlogUITests.m */; };
@@ -40,7 +38,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		DF7828C7239A24C70029F73A /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		DF7828CB239ABE010029F73A /* BlogCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BlogCollectionViewCell.h; sourceTree = "<group>"; };
 		DF7828CC239ABE010029F73A /* BlogCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BlogCollectionViewCell.m; sourceTree = "<group>"; };
 		DF7828CE239AC0B30029F73A /* BlogResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BlogResponse.h; sourceTree = "<group>"; };
@@ -55,7 +52,6 @@
 		DFC7435E239A1C9200C55F1E /* BlogContentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BlogContentViewController.h; sourceTree = "<group>"; };
 		DFC7435F239A1C9200C55F1E /* BlogContentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BlogContentViewController.m; sourceTree = "<group>"; };
 		DFC74364239A1C9700C55F1E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		DFC74367239A1C9700C55F1E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DFC74369239A1C9700C55F1E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DFC7436A239A1C9700C55F1E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		DFC74370239A1C9700C55F1E /* PersonalCapitalBlogTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PersonalCapitalBlogTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -125,10 +121,8 @@
 				DFC7438D239A1FF900C55F1E /* BlogCollectionViewController.h */,
 				DFC7438E239A1FF900C55F1E /* BlogCollectionViewController.m */,
 				DFC74364239A1C9700C55F1E /* Assets.xcassets */,
-				DFC74366239A1C9700C55F1E /* LaunchScreen.storyboard */,
 				DFC74369239A1C9700C55F1E /* Info.plist */,
 				DFC7436A239A1C9700C55F1E /* main.m */,
-				DF7828C7239A24C70029F73A /* Main.storyboard */,
 				DF7828CB239ABE010029F73A /* BlogCollectionViewCell.h */,
 				DF7828CC239ABE010029F73A /* BlogCollectionViewCell.m */,
 				DF7828CE239AC0B30029F73A /* BlogResponse.h */,
@@ -260,8 +254,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DF7828C8239A24C70029F73A /* Main.storyboard in Resources */,
-				DFC74368239A1C9700C55F1E /* LaunchScreen.storyboard in Resources */,
 				DFC74365239A1C9700C55F1E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -328,17 +320,6 @@
 			targetProxy = DFC7437C239A1C9700C55F1E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		DFC74366239A1C9700C55F1E /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				DFC74367239A1C9700C55F1E /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		DFC74382239A1C9700C55F1E /* Debug */ = {
